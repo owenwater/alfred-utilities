@@ -10,11 +10,18 @@ get_plist_value() {
     value="`$PLIST -c \"Print $1\" \"$2\"`"
 }
 
+PROMPT="linkwf:"
+
 if [ -n "$1" ];
 then
     current_bundle_id="$1"
     current_name="$1"
 else
+    if [ ! -f "$INFO_PLIST" ];
+    then
+        echo "$PROMPT Please provides workflow name/bundleid or info.plist file"
+        exit -1
+    fi
     get_plist_value "bundleid" "$INFO_PLIST"
     current_bundle_id="$value"
     get_plist_value "name" "$INFO_PLIST"
@@ -46,7 +53,7 @@ do
     fi
 done
 
-echo "linkwf: Can't find workflow associated with current directory"
+echo "$PROMPT Can't find workflow associated with current directory"
 exit -1
 
 
