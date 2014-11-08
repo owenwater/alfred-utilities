@@ -1,7 +1,6 @@
 #!/bin/bash
 
 INFO_PLIST="info.plist"
-NEW_PLIST="new.plist"
 
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
 DEFAULT_SETTING="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/preferences/workflows/prefs.plist"
@@ -12,6 +11,15 @@ PLIST="/usr/libexec/PlistBuddy"
 get_default_value() {
     default_value="`$PLIST -c \"Print $1\" \"$DEFAULT_SETTING\" 2>/dev/null`"
 }
+
+plist_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+if [ ! $1 ];
+then 
+    echo "createwf: please provides workflow name"
+    exit -1
+fi
 
 
 #read default settings from prefs.plist
@@ -35,16 +43,16 @@ name="$1"
 values=("$bundle_id" "$author" "$name" "$readme" "$website")
 keys=("bundleid" "createdby" "name" "readme" "webaddress")
 
-cp $INFO_PLIST $NEW_PLIST
+cp "$plist_dir/$INFO_PLIST" $INFO_PLIST
 
 for i in "${!values[@]}"; do
-    $PLIST -c "Set ${keys[$i]} ${values[$i]}" $NEW_PLIST
+    $PLIST -c "Set ${keys[$i]} ${values[$i]}" $INFO_PLIST
 done
 
 
 #create workflow
-dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d_%H_%M_%S'`"
+dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d'`"
 mkdir "$dir"
 
-mv "$NEW_PLIST" "$dir/$INFO_PLIST"
+cp "$INFO_PLIST" "$dir/$INFO_PLIST"
 

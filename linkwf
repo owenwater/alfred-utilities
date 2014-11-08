@@ -1,0 +1,46 @@
+#!/bin/sh
+
+INFO_PLIST="info.plist"
+
+WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
+
+PLIST="/usr/libexec/PlistBuddy"
+
+get_plist_value() {
+    value="`$PLIST -c \"Print $1\" \"$2\"`"
+}
+
+get_plist_value "bundleid" "$INFO_PLIST"
+current_bundle_id="$value"
+get_plist_value "name" "$INFO_PLIST"
+current_name="$value"
+
+cd "$WORKFLOW_PATH"
+
+wf_list=()
+
+for wf in */ ;
+do
+    wf_list+=("$WORKFLOW_PATH/$wf")
+done
+
+cd - > /dev/null
+
+for ((i = 0; i < ${#wf_list[@]}; i++))
+do
+    plist="${wf_list[$i]}/$INFO_PLIST"
+    get_plist_value "bundleid" "$plist"
+    bundle_id="$value"
+    get_plist_value "name" "$plist"
+    name="$value"
+    if [ "$current_bundle_id" == "$bundle_id" -o "$current_name" == "$name" ];
+    then
+        echo "${wf_list[$i]}"
+        exit 0
+    fi
+done
+
+echo "linkwf: Can't find workflow associated with current directory"
+
+
+
