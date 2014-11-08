@@ -10,10 +10,16 @@ get_plist_value() {
     value="`$PLIST -c \"Print $1\" \"$2\"`"
 }
 
-get_plist_value "bundleid" "$INFO_PLIST"
-current_bundle_id="$value"
-get_plist_value "name" "$INFO_PLIST"
-current_name="$value"
+if [ -n "$1" ];
+then
+    current_bundle_id="$1"
+    current_name="$1"
+else
+    get_plist_value "bundleid" "$INFO_PLIST"
+    current_bundle_id="$value"
+    get_plist_value "name" "$INFO_PLIST"
+    current_name="$value"
+fi
 
 cd "$WORKFLOW_PATH" 
 
