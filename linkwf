@@ -15,7 +15,7 @@ current_bundle_id="$value"
 get_plist_value "name" "$INFO_PLIST"
 current_name="$value"
 
-cd "$WORKFLOW_PATH"
+cd "$WORKFLOW_PATH" 
 
 wf_list=()
 
@@ -41,6 +41,7 @@ do
 done
 
 echo "linkwf: Can't find workflow associated with current directory"
+exit -1
 
 
 

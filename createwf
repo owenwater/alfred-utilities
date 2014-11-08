@@ -7,52 +7,72 @@ DEFAULT_SETTING="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfred
 WORKFLOW_DIR_PREFIX="user.workflow."
 
 PLIST="/usr/libexec/PlistBuddy"
+plist_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+PROMPT="createwf:"
 
 get_default_value() {
     default_value="`$PLIST -c \"Print $1\" \"$DEFAULT_SETTING\" 2>/dev/null`"
 }
 
-plist_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+create_plist() {
+    if [ ! $1 ];
+    then 
+        echo "$PROMPT please provides workflow name"
+        exit -1
+    fi
 
 
-if [ ! $1 ];
-then 
-    echo "createwf: please provides workflow name"
-    exit -1
+    #read default settings from prefs.plist
+    get_default_value 'defaultBundleId'
+    bundle_id_prefix="$default_value"
+
+    get_default_value 'defaultCreatedBy'
+    author="$default_value"
+
+    get_default_value 'defaultReadme'
+    readme="$default_value"
+
+    get_default_value 'defaultWebsite'
+    website="$default_value"
+
+    bundle_id="$bundle_id_prefix`echo $1 | tr '[:upper:]' '[:lower:]'`"
+    name="$1"
+
+
+    #create new info.plist
+    values=("$bundle_id" "$author" "$name" "$readme" "$website")
+    keys=("bundleid" "createdby" "name" "readme" "webaddress")
+
+    cp "$plist_dir/$INFO_PLIST" $INFO_PLIST
+
+    for i in "${!values[@]}"; do
+        $PLIST -c "Set ${keys[$i]} ${values[$i]}" $INFO_PLIST
+    done
+}
+
+copy_plist() {
+    dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d'`"
+    mkdir "$dir"
+
+    cp "$INFO_PLIST" "$dir/$INFO_PLIST"
+}
+
+if [ -a "$INFO_PLIST" ];
+then
+    echo "$PROMPT workflow already exist locally"
+else
+    create_plist $1
+fi
+
+if linkwf > /dev/null
+then
+    echo "$PROMPT workflow already created"
+else
+    copy_plist
 fi
 
 
-#read default settings from prefs.plist
-get_default_value 'defaultBundleId'
-bundle_id_prefix="$default_value"
-
-get_default_value 'defaultCreatedBy'
-author="$default_value"
-
-get_default_value 'defaultReadme'
-readme="$default_value"
-
-get_default_value 'defaultWebsite'
-website="$default_value"
-
-bundle_id="$bundle_id_prefix`echo $1 | tr '[:upper:]' '[:lower:]'`"
-name="$1"
 
 
-#create new info.plist
-values=("$bundle_id" "$author" "$name" "$readme" "$website")
-keys=("bundleid" "createdby" "name" "readme" "webaddress")
-
-cp "$plist_dir/$INFO_PLIST" $INFO_PLIST
-
-for i in "${!values[@]}"; do
-    $PLIST -c "Set ${keys[$i]} ${values[$i]}" $INFO_PLIST
-done
-
-
-#create workflow
-dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d'`"
-mkdir "$dir"
-
-cp "$INFO_PLIST" "$dir/$INFO_PLIST"
 
