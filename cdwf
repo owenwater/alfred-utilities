@@ -1,0 +1,10 @@
+#!/bin/sh
+
+WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
+
+if [ -z "$1" ]
+then 
+    cd "$WORKFLOW_PATH"
+else
+    cd "`linkwf \"$1\"`"
+fi
