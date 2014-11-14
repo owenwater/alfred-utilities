@@ -9,7 +9,7 @@ WORKFLOW_DIR_PREFIX="user.workflow."
 PLIST="/usr/libexec/PlistBuddy"
 plist_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-PROMPT="createwf:"
+CMD="createwf:"
 
 get_default_value() {
     default_value="`$PLIST -c \"Print $1\" \"$DEFAULT_SETTING\" 2>/dev/null`"
@@ -18,7 +18,7 @@ get_default_value() {
 create_plist() {
     if [ ! $1 ];
     then 
-        echo "$PROMPT please provides workflow name"
+        echo "$CMD please provides workflow name"
         exit -1
     fi
 
@@ -60,14 +60,14 @@ copy_plist() {
 
 if [ -a "$INFO_PLIST" ];
 then
-    echo "$PROMPT workflow already exist locally"
+    echo "$CMD workflow already exist locally"
 else
     create_plist $1
 fi
 
 if linkwf > /dev/null
 then
-    echo "$PROMPT workflow already created"
+    echo "$CMD workflow already created"
 else
     copy_plist
 fi

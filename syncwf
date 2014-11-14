@@ -1,10 +1,10 @@
 #!/bin/sh
 
-PROMPT="syncwf"
+CMD="syncwf"
 
 OPTIND=1
 usage() {
-    echo "usage: $PROMPT [-r] [-f] [name/bundleid] "
+    echo "usage: $POMPT [-r] [-f] [name/bundleid] "
     exit 0
 }
 reverse=false
@@ -34,20 +34,20 @@ search_word="$1"
 if target_dir="`linkwf \"$search_word\"`"; then  
     :
 elif [ -n "$search_word" ]; then
-    echo "$PROMPT can't find workflow"
+    echo "$CMD can't find workflow"
     exit -1
 else
     read line
     target_dir="$line"
     if [ ! -d "$target_dir" ];
     then
-        echo "$PROMPT can't find workflow"
+        echo "$CMD can't find workflow"
         exit -1
     fi
 fi
 
 if $confirm; then
-    read -p "$PROMPT: sync content between: `pwd` and $target_dir, continue? [y/n]" -n 1 -r reply
+    read -p "$CMD: sync content between: `pwd` and $target_dir, continue? [y/n]" -n 1 -r reply
     if [[ ! $reply =~ [yY] ]]; then
         echo
         exit -1

@@ -1,6 +1,34 @@
 #!/bin/sh
 
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
+DATA_PATH="/Users/owen/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
+
+CMD="cdwf"
+
+OPTIND=1
+usage() {
+    echo "usage: $CMD [-d] [name/bundleid] "
+    exit 0
+}
+
+data_floor=false
+
+while getopts "hd" opt
+do
+    case $opt in
+        h)
+            usage
+            ;;
+        d) 
+            confirm=false
+            ;;
+        \?)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
 
 if target_dir="`linkwf \"$1\"`"; then 
     cd "$target_dir"
