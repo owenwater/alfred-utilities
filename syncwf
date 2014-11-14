@@ -4,12 +4,13 @@ CMD="syncwf"
 
 OPTIND=1
 usage() {
-    echo "usage: $POMPT [-r] [-f] [name/bundleid] "
+    echo "usage: $POMPT [-r] [-f] [-s] [name/bundleid] "
     exit 0
 }
 reverse=false
 confirm=true
-while getopts "hrf" opt
+oneway=false
+while getopts "hrfs" opt
 do
     case $opt in
         h)
@@ -20,6 +21,9 @@ do
             ;;
         f) 
             confirm=false
+            ;;
+        s) 
+            oneway=true
             ;;
         \?)
             usage
@@ -57,10 +61,14 @@ fi
 
 if $reverse; then
     rsync -av --update  --delete --exclude '.*' "$target_dir" ./
-    rsync -av --update  --delete --exclude '.*' ./ "$target_dir"
+    if ! $oneway ; then
+        rsync -av --update  --delete --exclude '.*' ./ "$target_dir"
+    fi
 else
     rsync -av --update  --delete --exclude '.*' ./ "$target_dir"
-    rsync -av --update  --delete --exclude '.*' "$target_dir" ./
+    if ! $oneway ; then
+        rsync -av --update  --delete --exclude '.*' "$target_dir" ./
+    fi
 fi
 
 
