@@ -7,7 +7,7 @@ WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpr
 PLIST="/usr/libexec/PlistBuddy"
 
 get_plist_value() {
-    value="`$PLIST -c \"Print $1\" \"$2\"`"
+    value="`$PLIST -c \"Print $1\" \"$2\" 2>/dev/null`"
 }
 
 CMD="linkwf:"

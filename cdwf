@@ -3,6 +3,8 @@
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
 DATA_PATH="/Users/owen/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
 
+INFO_PLIST="info.plist"
+PLIST="/usr/libexec/PlistBuddy"
 CMD="cdwf"
 
 OPTIND=1
@@ -11,7 +13,7 @@ usage() {
     exit 0
 }
 
-data_floor=false
+is_data_dir=false
 
 while getopts "hd" opt
 do
@@ -20,7 +22,7 @@ do
             usage
             ;;
         d) 
-            confirm=false
+            is_data_dir=true
             ;;
         \?)
             usage
@@ -30,8 +32,28 @@ done
 shift $((OPTIND-1))
 
 
-if target_dir="`linkwf \"$1\"`"; then 
-    cd "$target_dir"
-else
-    cd "$WORKFLOW_PATH"
+if ! target_dir="`linkwf \"$1\"`"; then 
+    target_dir="$WORKFLOW_PATH"
 fi
+
+if $is_data_dir ; then
+    wf_dir="$target_dir"
+    target_dir="$DATA_PATH"
+    if [ -f "$wf_dir/$INFO_PLIST" ]; then
+        bundle_id="`$PLIST -c \"Print bundleid\" \"$wf_dir/$INFO_PLIST\" 2>/dev/null`"
+        if [ -n "$bundle_id" ]; then
+            dir="$DATA_PATH/$bundle_id"
+            if [ -d "$dir" ]; then
+                target_dir="$dir"
+            else
+                search_result="`find \"$DATA_PATH\" -type d -name \"*$bundle_id*\" | head -1`"
+                if [ -n "$search_result" ]; then
+                    target_dir="$search_result"
+                fi
+            fi
+        fi
+    fi
+
+fi
+
+cd "$target_dir"
