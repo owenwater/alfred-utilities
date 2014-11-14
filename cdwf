@@ -2,9 +2,8 @@
 
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
 
-if [ -z "$1" ]
-then 
-    cd "$WORKFLOW_PATH"
+if target_dir="`linkwf \"$1\"`"; then 
+    cd "$target_dir"
 else
-    cd "`linkwf \"$1\"`"
+    cd "$WORKFLOW_PATH"
 fi
