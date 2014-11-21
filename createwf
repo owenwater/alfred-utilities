@@ -16,13 +16,6 @@ get_default_value() {
 }
 
 create_plist() {
-    if [ ! $1 ];
-    then 
-        echo "$CMD please provides workflow name"
-        exit -1
-    fi
-
-
     #read default settings from prefs.plist
     get_default_value 'defaultBundleId'
     bundle_id_prefix="$default_value"
@@ -44,35 +37,25 @@ create_plist() {
     values=("$bundle_id" "$author" "$name" "$readme" "$website")
     keys=("bundleid" "createdby" "name" "readme" "webaddress")
 
-    cp "$plist_dir/$INFO_PLIST" $INFO_PLIST
+    dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d'`"
+    if [ ! -d "$dir" ]; then
+        mkdir "$dir"
+    fi
+
+    cp "$plist_dir/$INFO_PLIST" "$dir/$INFO_PLIST"
 
     for i in "${!values[@]}"; do
-        $PLIST -c "Set ${keys[$i]} ${values[$i]}" $INFO_PLIST
+        $PLIST -c "Set ${keys[$i]} ${values[$i]}" "$dir/$INFO_PLIST"
     done
 }
 
-copy_plist() {
-    dir="$WORKFLOW_PATH/$WORKFLOW_DIR_PREFIX$name"".`date +'%Y_%m_%d'`"
-    mkdir "$dir"
-
-    cp "$INFO_PLIST" "$dir/$INFO_PLIST"
-}
-
-if [ -a "$INFO_PLIST" ];
-then
-    echo "$CMD workflow already exist locally"
+if [ -n "$1" ]; then
+    if linkwf "$1" > /dev/null ; then
+        echo "$CMD: workflow is already existed"
+        exit -1
+    fi
+    create_plist "$1"
 else
-    create_plist $1
+    echo "$CMD: please provides workflow name"
+    exit -1
 fi
-
-if linkwf > /dev/null
-then
-    echo "$CMD workflow already created"
-else
-    copy_plist
-fi
-
-
-
-
-

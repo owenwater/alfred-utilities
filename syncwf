@@ -4,26 +4,31 @@ CMD="syncwf"
 
 OPTIND=1
 usage() {
-    echo "usage: $POMPT [-r] [-f] [-s] [name/bundleid] "
+    echo "usage: $POMPT [-g] [-p] [-n] -o [override rsync options] [name/bundleid] "
     exit 0
 }
-reverse=false
+get=false
+put=false
 confirm=true
-oneway=false
-while getopts "hrfs" opt
+options="-av --update  --delete --exclude=.*"
+dryrun=false
+while getopts "hngpo:" opt
 do
     case $opt in
         h)
             usage
             ;;
-        r)  
-            reverse=true
+        g)  
+            get=true
             ;;
-        f) 
-            confirm=false
+        p) 
+            put=true
             ;;
-        s) 
-            oneway=true
+        o) 
+            options="$OPTARG"
+            ;;
+        n)
+            dryrun=true
             ;;
         \?)
             usage
@@ -32,9 +37,11 @@ do
 done
 shift $((OPTIND-1))
 
+if ! $get && ! $put ; then
+    usage
+fi
 
 search_word="$1"
-
 if target_dir="`linkwf \"$search_word\"`"; then  
     :
 elif [ -n "$search_word" ]; then
@@ -50,25 +57,26 @@ else
     fi
 fi
 
+if $dryrun; then
+    options+=" -n"
+fi
+
 if $confirm; then
-    read -p "$CMD: sync content between: `pwd` and $target_dir, continue? [y/n]" -n 1 -r reply
+    read -p "$CMD: sync content between: `pwd` and $target_dir with option \"$options\", continue? [y/n]" -n 1 -r reply
+    echo
     if [[ ! $reply =~ [yY] ]]; then
-        echo
         exit -1
     fi
-
 fi
 
-if $reverse; then
-    rsync -av --update  --delete --exclude '.*' "$target_dir" ./
-    if ! $oneway ; then
-        rsync -av --update  --delete --exclude '.*' ./ "$target_dir"
-    fi
-else
-    rsync -av --update  --delete --exclude '.*' ./ "$target_dir"
-    if ! $oneway ; then
-        rsync -av --update  --delete --exclude '.*' "$target_dir" ./
-    fi
+sync_folder() {
+    rsync $options "$1" "$2"
+}
+
+if $get; then
+    sync_folder "$target_dir" "./"
 fi
 
-
+if $put; then
+    sync_folder "./" "$target_dir"
+fi
