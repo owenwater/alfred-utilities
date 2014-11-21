@@ -4,7 +4,7 @@ CMD="syncwf"
 
 OPTIND=1
 usage() {
-    echo "usage: $POMPT [-g] [-p] [-n] -o [override rsync options] [name/bundleid] "
+    echo "usage: $CMD -gp [-f] [-n] [-o rsync-options] [name/bundleid] "
     exit 0
 }
 get=false
@@ -38,7 +38,8 @@ done
 shift $((OPTIND-1))
 
 if ! $get && ! $put ; then
-    usage
+    echo "$CMD: Neither -g nor -p be selected, exiting..."
+    exit -1
 fi
 
 search_word="$1"
@@ -62,7 +63,14 @@ if $dryrun; then
 fi
 
 if $confirm; then
-    read -p "$CMD: sync content between: `pwd` and $target_dir with option \"$options\", continue? [y/n]" -n 1 -r reply
+    if $get && $put; then 
+        msg= "Sync content between: `pwd` and $target_dir"
+    elif $get; then
+        msg="Copy content from $target_dir to `pwd`"
+    elif $put; then
+        msg="Copy content from `pwd` to $target_dir"
+    fi
+    read -p "$CMD: $msg with option \"$options\", continue? [y/n]" -n 1 -r reply
     echo
     if [[ ! $reply =~ [yY] ]]; then
         exit -1
@@ -73,10 +81,12 @@ sync_folder() {
     rsync $options "$1" "$2"
 }
 
-if $get; then
-    sync_folder "$target_dir" "./"
-fi
 
 if $put; then
     sync_folder "./" "$target_dir"
 fi
+
+if $get; then
+    sync_folder "$target_dir" "./"
+fi
+
