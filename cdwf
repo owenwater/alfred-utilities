@@ -1,16 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
 DATA_PATH="/Users/$USER/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
-
 INFO_PLIST="info.plist"
 PLIST="/usr/libexec/PlistBuddy"
-CMD="cdwf"
+CMD="`basename $0`"
 
 OPTIND=1
 usage() {
     echo "usage: $CMD [-d] [name/bundleid] "
-    exit 0
+    return 0
 }
 
 is_data_dir=false

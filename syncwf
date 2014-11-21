@@ -1,6 +1,7 @@
 #!/bin/sh
 
-CMD="syncwf"
+current_dir="`dirname $0`"
+source $current_dir/lib/const.sh
 
 OPTIND=1
 usage() {

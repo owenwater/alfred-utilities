@@ -1,15 +1,7 @@
 #!/bin/bash
 
-INFO_PLIST="info.plist"
-
-WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
-DEFAULT_SETTING="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/preferences/workflows/prefs.plist"
-WORKFLOW_DIR_PREFIX="user.workflow."
-
-PLIST="/usr/libexec/PlistBuddy"
-plist_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-CMD="createwf:"
+current_dir="`dirname $0`"
+source $current_dir/lib/const.sh
 
 get_default_value() {
     default_value="`$PLIST -c \"Print $1\" \"$DEFAULT_SETTING\" 2>/dev/null`"
@@ -42,7 +34,7 @@ create_plist() {
         mkdir "$dir"
     fi
 
-    cp "$plist_dir/$INFO_PLIST" "$dir/$INFO_PLIST"
+    cp "$current_dir/$INFO_PLIST" "$dir/$INFO_PLIST"
 
     for i in "${!values[@]}"; do
         $PLIST -c "Set ${keys[$i]} ${values[$i]}" "$dir/$INFO_PLIST"
