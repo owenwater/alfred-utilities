@@ -32,7 +32,7 @@ Bash script utilities package to help developing Alfred workflows in command lin
 		* **-n** _(Dry run)_ Show what would have been transferred by `rsync`.
 		* **[workflow-name|bundle-id]** Use `workflow-name`, `bundle-id` or `info.plist` file (if exists in current folder) to determine the path of workflow directory. Another way is to read path from pipeline directly, e.g. `echo $path_of_workflow_directory | syncwf`.
 		
-* linkwf -- print the path to workflow based on `workflow-name`, `bundle-id` or `info.plist` (if exists in current folder)
-	* Usage: `linkwf [workflow-name or bundle-id]` 
+* findwf -- print the path to workflow based on `workflow-name`, `bundle-id` or `info.plist` (if exists in current folder)
+	* Usage: `findwf [workflow-name or bundle-id]` 
 
 

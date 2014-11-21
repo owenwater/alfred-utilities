@@ -42,7 +42,7 @@ create_plist() {
 }
 
 if [ -n "$1" ]; then
-    if linkwf "$1" > /dev/null ; then
+    if findwf "$1" > /dev/null ; then
         echo "$CMD: workflow is already existed"
         exit -1
     fi

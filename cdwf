@@ -31,7 +31,7 @@ done
 shift $((OPTIND-1))
 
 
-if ! target_dir="`linkwf \"$1\"`"; then 
+if ! target_dir="`findwf \"$1\"`"; then 
     target_dir="$WORKFLOW_PATH"
 fi
 

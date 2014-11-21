@@ -44,7 +44,7 @@ if ! $get && ! $put ; then
 fi
 
 search_word="$1"
-if target_dir="`linkwf \"$search_word\"`"; then  
+if target_dir="`findwf \"$search_word\"`"; then  
     :
 elif [ -n "$search_word" ]; then
     echo "$CMD can't find workflow"

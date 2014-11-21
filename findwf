@@ -7,8 +7,6 @@ get_plist_value() {
     value="`$PLIST -c \"Print $1\" \"$2\" 2>/dev/null`"
 }
 
-CMD="linkwf:"
-
 if [ -n "$1" ];
 then
     current_bundle_id="$1"
@@ -50,7 +48,7 @@ do
     fi
 done
 
-echo "$CMD Can't find workflow associated with current directory"
+echo "$CMD: Can't find workflow associated with current directory"
 exit -1
 
 
