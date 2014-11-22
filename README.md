@@ -35,4 +35,6 @@ Bash script utilities package to help developing Alfred workflows in command lin
 * findwf -- print the path to workflow based on `workflow-name`, `bundle-id` or `info.plist` (if exists in current folder)
 	* Usage: `findwf [workflow-name or bundle-id]` 
 
+###Copyright and Licensing
 
+* All code and documents are licensed under [MIT]{http://opensource.org/licenses/MIT}
