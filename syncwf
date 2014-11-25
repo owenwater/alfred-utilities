@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 current_dir="`dirname $0`"
 source $current_dir/lib/const.sh
@@ -8,11 +8,18 @@ usage() {
     echo "usage: $CMD -gp [-f] [-n] [-o rsync-options] [name/bundleid] "
     exit 0
 }
+
 get=false
 put=false
 confirm=true
 options="-av --update  --delete --exclude=.*"
 dryrun=false
+gitignore=".gitignore"
+
+if [[ -f "$gitignore" ]]; then
+    options+=" --exclude-from=$gitignore"
+fi
+
 while getopts "hngpo:" opt
 do
     case $opt in

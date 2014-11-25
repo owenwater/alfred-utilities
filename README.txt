@@ -28,7 +28,7 @@ Bash script utilities package to help developing Alfred workflows in command lin
 		-g (Get) -- Copy content from workflow directory to the current one.
 		-p (Put) -- Copy content from current directory to the workflow one.
 		-f (Force Mode) -- Synchronize without confirmation.
-		-o (Options) -- Use these options for rsync. Defalut rsync options  are "-av --update --delete --exclude=.*".
+		-o (Options) -- Use these options for rsync. Defalut rsync options  are "-av --update --delete --exclude=.* --exclude-from=.gitignore".
 		-n (Dry run) -- Show what would have been transferred by rsync.
 		[workflow-name|bundle-id]** Use workflow-name, bundle-id or info.plist file (if exists in current folder) to determine the path of workflow directory. Another way is to read path from pipeline directly, e.g. echo $path_of_workflow_directory | syncwf.
 		
