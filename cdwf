@@ -50,9 +50,6 @@ fi
 
 parent_dir=""
 
-echo $is_data_dir
-echo $is_cache_dir
-
 if $is_data_dir; then
     parent_dir="$DATA_PATH"
 elif $is_cache_dir; then
