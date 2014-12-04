@@ -1,26 +1,32 @@
 #!/bin/bash
 
 WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
-DATA_PATH="/Users/$USER/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
+CACHE_PATH="/Users/$USER/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
+DATA_PATH="/Users/$USER/Library/Application Support/Alfred 2/Workflow Data"
 INFO_PLIST="info.plist"
 PLIST="/usr/libexec/PlistBuddy"
 CMD="`basename $0`"
 
 OPTIND=1
+usage=false
 usage() {
-    echo "usage: $CMD [-d] [name/bundleid] "
-    return 0
+    echo "usage: $CMD [-c|-d] [name/bundleid] "
+    usage=true
 }
 
 is_data_dir=false
+is_cache_dir=false
 
-while getopts "hd" opt
+while getopts "hdc" opt
 do
     case $opt in
         h)
             usage
             ;;
-        d) 
+        c) 
+            is_cache_dir=true
+            ;;
+        d)
             is_data_dir=true
             ;;
         \?)
@@ -30,22 +36,41 @@ do
 done
 shift $((OPTIND-1))
 
+if ($is_cache_dir) && ($is_data_dir); then
+    usage
+fi
+
+if $usage; then
+    return -1
+fi
 
 if ! target_dir="`findwf \"$1\"`"; then 
     target_dir="$WORKFLOW_PATH"
 fi
 
-if $is_data_dir ; then
+parent_dir=""
+
+echo $is_data_dir
+echo $is_cache_dir
+
+if $is_data_dir; then
+    parent_dir="$DATA_PATH"
+elif $is_cache_dir; then
+    parent_dir="$CACHE_PATH"
+fi
+
+
+if [ -n "$parent_dir" ]; then
     wf_dir="$target_dir"
-    target_dir="$DATA_PATH"
+    target_dir="$parent_dir"
     if [ -f "$wf_dir/$INFO_PLIST" ]; then
         bundle_id="`$PLIST -c \"Print bundleid\" \"$wf_dir/$INFO_PLIST\" 2>/dev/null`"
         if [ -n "$bundle_id" ]; then
-            dir="$DATA_PATH/$bundle_id"
+            dir="$parent_dir/$bundle_id"
             if [ -d "$dir" ]; then
                 target_dir="$dir"
             else
-                search_result="`find \"$DATA_PATH\" -type d -name \"*$bundle_id*\" | head -1`"
+                search_result="`find \"$parent_dir\" -type d -name \"*$bundle_id*\" | head -1`"
                 if [ -n "$search_result" ]; then
                     target_dir="$search_result"
                 fi

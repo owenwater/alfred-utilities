@@ -16,10 +16,11 @@ Bash script utilities package to help developing Alfred workflows in command lin
 		* Workflow's attributes, which are name / bundleid / author / readme / website, are based on workflow-name and default setting in "Alfred -> Workflows -> + -> Workflow Defaults...".
 		
 * cdwf -- cd to the workflow folder
-	* Usage: cdwf [-d] [workflow-name|bundle-id]
+	* Usage: cdwf [-c|-d] [workflow-name|bundle-id]
 	* Description: 
 		Changing folder to workflow directory based on workflow-name or bundle-id. If there is an info.plist file in current folder, this command will also bring you to the corresponding workflow directory. When workflow cannot be found, you will be brought to "~/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows".
-		-d Instead of workflow directory, changing directory to workflow data folder under "~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data".
+        -c Instead of workflow directory, changing directory to workflow cache folder under ~/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data
+        -d Instead of workflow directory, changing directory to workflow data folder under ~/Library/Application Support/Alfred 2/Workflow Data.
 		
 * syncwf -- two way synchronization between current directory and workflow directory
 	* Usage: syncwf -gp [-f] [-o rsync-options] [workflow-name|bundle-id]
