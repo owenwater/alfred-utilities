@@ -38,4 +38,4 @@ Bash script utilities package to help developing Alfred workflows in command lin
 
 ###Copyright and Licensing
 
-* All code and documents are licensed under [MIT]{http://opensource.org/licenses/MIT}
+* All code and documents are licensed under [MIT](http://opensource.org/licenses/MIT)
