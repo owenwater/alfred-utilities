@@ -1,6 +1,12 @@
 #!/bin/bash
 
-WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
+DEFAULT_WORKFLOW_PATH="/Users/$USER/Library/Application Support/Alfred 2/Alfred.alfredpreferences/workflows"
+if ! alfred_path="`defaults read com.runningwithcrayons.Alfred-Preferences syncfolder 2>/dev/null`" ; then
+    WORKFLOW_PATH="$DEFAULT_WORKFLOW_PATH"
+else
+    WORKFLOW_PATH="`eval echo ${alfred_path}`/Alfred.alfredpreferences/workflows"
+fi
+
 CACHE_PATH="/Users/$USER/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data"
 DATA_PATH="/Users/$USER/Library/Application Support/Alfred 2/Workflow Data"
 INFO_PLIST="info.plist"
