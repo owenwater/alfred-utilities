@@ -23,14 +23,15 @@ Bash script utilities package to help developing Alfred workflows in command lin
         -d Instead of workflow directory, changing directory to workflow data folder under ~/Library/Application Support/Alfred 2/Workflow Data.
 		
 * syncwf -- two way synchronization between current directory and workflow directory
-	* Usage: syncwf -gp [-f] [-o rsync-options] [workflow-name|bundle-id]
+	* Usage: syncwf -gp [-f] [-o rsync-options [-a]] [workflow-name|bundle-id]
 	* Description: 
 		Update content between current and workflow directory with rsync
 		-g (Get) -- Copy content from workflow directory to the current one.
 		-p (Put) -- Copy content from current directory to the workflow one.
 		-f (Force Mode) -- Synchronize without confirmation.
-		-o (Options) -- Use these options for rsync. Defalut rsync options  are "-av --update --delete --exclude=.* --exclude-from=.gitignore".
-		-n (Dry run) -- Show what would have been transferred by rsync.
+		-o (Options) -- Use custom options for rsync. Defalut rsync options  are "-av --update --delete --exclude=.* --exclude-from=.gitignore".
+		-a (Options) -- Append custom options to the default one instead of replacement.	
+        -n (Dry run) -- Show what would have been transferred by rsync.
 		[workflow-name|bundle-id]** Use workflow-name, bundle-id or info.plist file (if exists in current folder) to determine the path of workflow directory. Another way is to read path from pipeline directly, e.g. echo $path_of_workflow_directory | syncwf.
 		
 * findwf -- print the path to workflow based on workflow-name, bundle-id or info.plist (if exists in current folder)

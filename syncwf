@@ -5,7 +5,7 @@ source $current_dir/lib/const.sh
 
 OPTIND=1
 usage() {
-    echo "usage: $CMD -gp [-f] [-n] [-o rsync-options] [name/bundleid] "
+    echo "usage: $CMD -gp [-f] [-n] [-o rsync-options [-a]] [name/bundleid] "
     exit 0
 }
 
@@ -15,16 +15,21 @@ confirm=true
 options="-av --update  --delete --exclude=.*"
 dryrun=false
 gitignore=".gitignore"
-
+append=false
+option_enable=false
+customer_options=""
 if [[ -f "$gitignore" ]]; then
     options+=" --exclude-from=$gitignore"
 fi
 
-while getopts "hngpo:" opt
+while getopts "hngpo:a" opt
 do
     case $opt in
         h)
             usage
+            ;;
+        a)
+            append=true
             ;;
         g)  
             get=true
@@ -33,7 +38,8 @@ do
             put=true
             ;;
         o) 
-            options="$OPTARG"
+            customer_options="$OPTARG"
+            option_enable=true
             ;;
         n)
             dryrun=true
@@ -44,6 +50,15 @@ do
     esac
 done
 shift $((OPTIND-1))
+
+if $option_enable; then
+    if $append; then
+        options="$options $customer_options"
+    else
+        options="$customer_options"
+    fi
+fi
+
 
 if ! $get && ! $put ; then
     echo "$CMD: Neither -g nor -p be selected, exiting..."
